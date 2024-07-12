@@ -2,7 +2,9 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const productRouter = require("./router/productRouter");
-
+const userRouter = require("./router/userRouter");
+const AppError = require("./utils/appError");
+const { globalErrorHandler } = require("./controller/errorController");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -12,12 +14,31 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/products", productRouter);
-app.get("*", (req, res) => {
-  res.send("404");
+app.use("/api/v1/user", userRouter);
+
+app.get("*", (req, res, next) => {
+  next(new AppError("Route not found", 404));
 });
 
-mongoose.connect(process.env.DB_LOCAL).then(() => {
-  console.log("Connected to MongoDB");
+app.use(globalErrorHandler);
+
+mongoose
+  .connect(process.env.DB_LOCAL)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => console.log("Server shut down"));
+
+process.on("unhandledRejection", () => {
+  app.close(() => {
+    process.exit(1);
+  });
+});
+
+process.on("uncaughtException", () => {
+  app.close(() => {
+    process.exit(1);
+  });
 });
 
 app.listen(3000, () => {

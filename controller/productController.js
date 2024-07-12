@@ -1,7 +1,9 @@
 const Product = require("../model/product");
 const ApiFeatures = require("../utils/apiFeatures");
+const catchAsync = require("../utils/catchAsync.js");
+const AppError = require("../utils/appError.js");
 
-exports.getAllProducts = async function (req, res) {
+exports.getAllProducts = catchAsync(async function (req, res) {
   const totalProducts = await Product.countDocuments();
 
   const features = new ApiFeatures(Product.find(), req.query)
@@ -17,9 +19,9 @@ exports.getAllProducts = async function (req, res) {
     results: products.length,
     products,
   });
-};
+});
 
-exports.createProduct = async function (req, res) {
+exports.createProduct = catchAsync(async function (req, res) {
   try {
     const base64Image = await req.file.buffer.toString("base64");
     const product = new Product({
@@ -38,28 +40,28 @@ exports.createProduct = async function (req, res) {
     console.error("Error saving product:", error);
     res.status(500).send("Error saving product");
   }
-};
+});
 
-exports.getTopProducts = async function (req, res) {
+exports.getTopProducts = catchAsync(async function (req, res) {
   const products = await Product.find().sort({ price: -1 }).limit(4);
   res.json({
     results: products.length,
     products,
   });
-};
+});
 
-exports.getProduct = async function (req, res) {
+exports.getProduct = catchAsync(async function (req, res, next) {
   const product = await Product.findById(req.params?.id);
 
   if (!product) {
-    res.status(404).json({ result: "Product not found" });
+    next(new AppError("No Product was found", 404));
   }
   res.json({
     product,
   });
-};
+});
 
-exports.getAllCategories = async function (req, res) {
+exports.getAllCategories = catchAsync(async function (req, res) {
   try {
     const products = await Product.aggregate([
       {
@@ -77,4 +79,4 @@ exports.getAllCategories = async function (req, res) {
     console.error(err);
     res.status(500).json({ error: err });
   }
-};
+});
