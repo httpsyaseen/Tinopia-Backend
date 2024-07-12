@@ -1,14 +1,17 @@
 const express = require("express");
-const router = express.Router();
-const productContoller = require("../controller/productController");
 const multer = require("multer");
+const productContoller = require("../controller/productController");
+const authController = require("../controller/authController");
+const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router
   .route("/")
-  .get(productContoller.getAllProducts)
+  .get(
+    productContoller.getAllProducts
+  )
   .post(upload.single("productImage"), productContoller.createProduct);
 
 router.route("/trending").get(productContoller.getTopProducts);

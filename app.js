@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/products", productRouter);
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1/users", userRouter);
 
 app.get("*", (req, res, next) => {
   next(new AppError("Route not found", 404));
@@ -29,18 +29,18 @@ mongoose
   })
   .catch((err) => console.log("Server shut down"));
 
+const server = app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
+
 process.on("unhandledRejection", () => {
-  app.close(() => {
+  server.close(() => {
     process.exit(1);
   });
 });
 
 process.on("uncaughtException", () => {
-  app.close(() => {
+  server.close(() => {
     process.exit(1);
   });
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
 });
