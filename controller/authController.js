@@ -165,6 +165,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const hashedLink = crypto
     .createHash("sha256")
     .update(req.params.token)
@@ -183,13 +184,21 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   user.passwordResetExpiresAt = undefined;
   user.passwordResetLink = undefined;
-  await user.save();
+  await user.save({ validateModifiedOnly: true });
+  const data = {
+    name: user.name,
+    email: user.email,
+    photo: user.photo,
+    address: user.address,
+    phoneNumber: user.phoneNumber,
+  };
 
   const token = signToken(user._id);
 
   res.json({
     status: "success",
     token,
+    user: data,
   });
 });
 

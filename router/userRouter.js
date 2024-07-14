@@ -9,7 +9,7 @@ const upload = multer({ storage: storage });
 
 router.route("/signup").post(authController.signup);
 router.route("/login").post(authController.login);
-router.route("/forget").post(authController.forgetPassword);
+router.route("/forgot").post(authController.forgetPassword);
 router.route("/resetPassword/:token").patch(authController.resetPassword);
 router
   .route("/updatePassword")
