@@ -1,8 +1,10 @@
-const mongoose = require("mongoose");
 const Product = require("./product");
 const User = require("./user");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const orderSchema = new mongoose.Schema({
+// Order Schema
+const orderSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -28,6 +30,11 @@ const orderSchema = new mongoose.Schema({
   totalCost: {
     type: Number,
     required: true,
+  },
+
+  shipped: {
+    type: Boolean,
+    default: false,
   },
 });
 

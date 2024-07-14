@@ -39,6 +39,15 @@ const userSchema = new mongoose.Schema({
       message: "Password Doesnot Match",
     },
   },
+  address: {
+    type: String,
+    required: [true, "Please provide an address"],
+  },
+  phoneNumber: {
+    type: String,
+    required: [true, "Please provide a phone number"],
+  },
+
   active: {
     type: Boolean,
     default: true,

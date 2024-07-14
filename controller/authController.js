@@ -32,19 +32,24 @@ exports.restrictedTo = (...roles) => {
 };
 
 exports.signup = catchAsync(async (req, res) => {
-  const { name, email, password, passwordConfirm, role } = req.body;
+  const { name, email, password, passwordConfirm, role, address, phoneNumber } =
+    req.body;
   const user = await User.create({
     name,
     email,
     password,
     role,
     passwordConfirm,
+    address,
+    phoneNumber,
   });
 
   const data = {
     name: user.name,
     email: user.email,
     photo: user.photo,
+    address: user.address,
+    phoneNumber: user.phoneNumber,
   };
 
   const token = signToken(user._id);
@@ -77,6 +82,8 @@ exports.login = catchAsync(async (req, res, next) => {
     name: user.name,
     email: user.email,
     photo: user.photo,
+    address: user.address,
+    phoneNumber: user.phoneNumber,
   };
 
   res.status(200).json({
@@ -210,9 +217,16 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   const newToken = signToken(user._id);
 
+  const userData = {
+    name: user.name,
+    email: user.email,
+    photo: user.photo,
+  };
+
   res.json({
     status: "success",
     token: newToken,
+    user: userData,
   });
 });
 
@@ -221,7 +235,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     return next(new AppError("Another route defined for password"));
   }
 
-  const data = filterObj(req.body, "name", "email");
+  const data = filterObj(req.body, "name", "email", "photo");
   const updatedUser = await User.findByIdAndUpdate(req.user.id, data, {
     new: true,
     runValidators: true,
