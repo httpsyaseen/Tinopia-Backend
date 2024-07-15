@@ -36,6 +36,12 @@ const orderSchema = new Schema({
     type: Boolean,
     default: false,
   },
+
+  status: {
+    type: String,
+    default: "not delivered",
+    enum: ["not delivered", "delivered"],
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);

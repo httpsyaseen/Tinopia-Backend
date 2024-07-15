@@ -2,11 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
+const { globalErrorHandler } = require("./controller/errorController");
+const AppError = require("./utils/appError");
 const productRouter = require("./router/productRouter");
 const userRouter = require("./router/userRouter");
 const orderRouter = require("./router/orderRouter");
-const AppError = require("./utils/appError");
-const { globalErrorHandler } = require("./controller/errorController");
+const reviewRouter = require("./router/reviewRouter");
+const purchaseRouter = require("./router/purchaseRouter");
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use(morgan("dev"));
 app.use("/products", productRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/orders/", orderRouter);
+app.use("/api/v1/purchases/", purchaseRouter);
+app.use("/api/v1/reviews/", reviewRouter);
 
 app.get("*", (req, res, next) => {
   next(new AppError("Route not found", 404));
@@ -30,7 +34,7 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
   })
-  .catch((err) => console.log("Server shut down"));
+  .catch((err) => console.log(err, "Server shut down"));
 
 const server = app.listen(3000, () => {
   console.log("Server is running on port 3000");
