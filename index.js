@@ -30,7 +30,9 @@ app.get("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 mongoose
-  .connect(process.env.DB_REMOTE)
+  .connect(
+    "mongodb+srv://yaseenwalker1:tinopia@cluster0.wetcoub.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
