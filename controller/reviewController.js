@@ -15,3 +15,18 @@ exports.createReview = catchAsync(async (req, res, next) => {
     review,
   });
 });
+
+exports.getProductReview = catchAsync(async (req, res, next) => {
+  const reviews = await Review.find({ product: req.params.productId })
+    .populate("user", "name photo")
+    .sort({ reviewDate: -1 });
+
+  if (!reviews) {
+    return next(new AppError("No reviews found", 404));
+  }
+
+  res.json({
+    status: "success",
+    reviews,
+  });
+});

@@ -63,7 +63,7 @@ exports.reviewAllowed = catchAsync(async (req, res, next) => {
   //check if user have bought a product or not
   const purchase = await Purchase.find({
     user: req.user.id,
-    product: req.body.product,
+    product: req.params.productId,
   });
 
   //check if already reviewd or not
@@ -77,7 +77,7 @@ exports.reviewAllowed = catchAsync(async (req, res, next) => {
   }
 
   //allowed to review
-  re.json({
+  res.json({
     allowed: true,
   });
 });

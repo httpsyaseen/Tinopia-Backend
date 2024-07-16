@@ -17,7 +17,7 @@ app.use(express.json({ limit: "10mb" }));
 
 app.use(morgan("dev"));
 
-app.use("/products", productRouter);
+app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/orders/", orderRouter);
 app.use("/api/v1/purchases/", purchaseRouter);
@@ -30,7 +30,7 @@ app.get("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 mongoose
-  .connect(process.env.DB_LOCAL)
+  .connect(process.env.DB_REMOTE)
   .then(() => {
     console.log("Connected to MongoDB");
   })

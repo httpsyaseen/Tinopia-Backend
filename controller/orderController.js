@@ -41,11 +41,13 @@ exports.getOrderById = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserOrders = catchAsync(async (req, res, next) => {
-  const orders = await Order.find({ user: req.user.id }).populate({
-    path: "products.product",
-    select: "name price image ",
-  });
-
+  console.log(req.headers);
+  const orders = await Order.find({ user: req.user.id })
+    .sort({ orderDate: -1 })
+    .populate({
+      path: "products.product",
+      select: "name price image ",
+    });
   if (!orders) {
     return next(new AppError("No orders found for this user", 404));
   }

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Product = require("./product");
 
 const reviewSchema = new mongoose.Schema({
   review: {
@@ -25,6 +26,22 @@ const reviewSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+});
+
+reviewSchema.post("save", async function () {
+  const product = await Product.findById(this.product);
+
+  if (!product) return;
+
+  const totalRating = product.rating * product.totalRatings + this.rating;
+  const newAvg = totalRating / (product.totalRatings + 1);
+  const data = {
+    totalRatings: product.totalRatings + 1,
+    rating: newAvg,
+  };
+  await Product.findByIdAndUpdate(product._id, data);
+
+  return;
 });
 
 const Review = mongoose.model("Review", reviewSchema);

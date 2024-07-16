@@ -12,4 +12,6 @@ router
     reviewController.createReview
   );
 
+router.route("/:productId").get(reviewController.getProductReview);
+
 module.exports = router;
