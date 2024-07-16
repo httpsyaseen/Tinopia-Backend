@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --env-file=config.env app.js",
+    "start": "nodemon --env-file=config.env index.js",
     "script": "nodemon --env-file=config.env script.js",
     "script2": "nodemon --env-file=config.env script2.js"
   },
