@@ -13,7 +13,7 @@ const purchaseRouter = require("./router/purchaseRouter");
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "5mb" }));
 
 app.use(morgan("dev"));
 
@@ -30,9 +30,7 @@ app.get("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 mongoose
-  .connect(
-    "mongodb+srv://yaseenwalker1:tinopia@cluster0.wetcoub.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(process.env.DB_REMOTE)
   .then(() => {
     console.log("Connected to MongoDB");
   })

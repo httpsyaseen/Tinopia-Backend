@@ -1,7 +1,7 @@
 const AppError = require("../utils/appError.js");
 
 const handleCastError = (err) => {
-  return new AppError("Invalid Id", 400);
+  return new AppError("Invalid or Duplicate Data", 400);
 };
 
 const handleDuplicateError = (err) => {
@@ -34,11 +34,10 @@ const handleTokenExpiredError = (err) =>
   new AppError("Login Session Expired. Login Again", 401);
 
 exports.globalErrorHandler = (err, req, res, next) => {
-  console.log(err);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
   if (err.isOperational) {
-    sendDevEror(err, res);
+    return sendDevEror(err, res);
   }
   let error = { ...err };
   if (err.name === "CastError") error = handleCastError(err);
